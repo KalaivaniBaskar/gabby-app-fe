@@ -1,25 +1,28 @@
-import logo from './logo.svg';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import React from 'react'
+import Login from './Components/Login';
+import Register from './Components/Register';
+import Chat from './Components/Chat';
+import ProfilePic from './Components/ProfilePic';
+import { BASE_URL } from './Services/APIServices.js';
+import io from "socket.io-client";
 
 function App() {
+  const socket = io.connect(BASE_URL);  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'> 
+    <Routes>
+      <Route path='/' element={ <Chat socket={socket} />} />
+      <Route path='/login' element={ <Login />} />
+      <Route path='/register' element={ <Register />} />
+      <Route path='/profile-pic' element={ <ProfilePic />} />
+      
+      <Route path='*' element={ <h3>404 : Page not found</h3>} />
+
+    </Routes>
     </div>
-  );
+  )
 }
 
 export default App;
