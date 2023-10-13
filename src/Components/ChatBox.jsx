@@ -12,7 +12,6 @@ import axios from 'axios';
 
 const ChatBox = ({socket}) => {
     
-   const subRef = useRef();
     const {user, room, chatUser, setChatUser, 
       messageList, setMessageList, toastOptions} = useCTX();
     const [ showPicker, setShowPicker] = useState(false)
@@ -85,20 +84,19 @@ const ChatBox = ({socket}) => {
       //  handleClose()
       }  
     }
-    // useEffect( ()=> {
-    //    setMessageList([])
-    // }, [room])
+
+    const closeChat = async() => {
+       const data = {name: user.username, room: room} 
+       await socket.emit("leave_room", data) 
+       setChatUser("")
+    }
 
     useEffect(()=> {
       socket.on("receive_msg", (data) => {
-        //console.log("recei",data)
+        //console.log("received",data)
          setMessageList((list) => [...list, data]);
       }) 
       
-      // socket.on("notification", (data) => {
-      //   console.log("rec notif", data)
-      // //toast.success(data.message, toastOptions)
-      //  })
   },[socket])
 
   return (
@@ -115,7 +113,7 @@ const ChatBox = ({socket}) => {
               />
             </Tooltip>
             <p>{chatUser.username}</p> 
-            <Button className='flex-end' onClick={() => setChatUser("")}>
+            <Button className='flex-end' onClick={closeChat}>
                 <CancelIcon />
             </Button>
 
@@ -156,7 +154,7 @@ const ChatBox = ({socket}) => {
                 <input type="text" value={msg} 
                 onChange={(e)=> setMsg(e.target.value)}
                 placeholder='write your message'/>
-
+                         
                 <button id="sub-btn"  type="submit">
                   <SendIcon/></button>
             </form>

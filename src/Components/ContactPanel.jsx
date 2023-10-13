@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 const ContactPanel = ({socket}) => {
     const {user, setUser, setChatUser,
         contactList, setContactList,
-        isDraw, setIsDraw,  setRoom, 
+        isDraw, setIsDraw, room, setRoom, 
          setMessageList, toastOptions } = useCTX();
          const navigate = useNavigate();
 
@@ -139,16 +139,20 @@ const ContactPanel = ({socket}) => {
         }  
       }
 
-      const handleChatUser = (ctct) => { 
+      const handleChatUser = async (ctct) => { 
         handleOpen();
        // console.log(ctct._id, user.id) 
+       if(room){
+        const data = {name: user.username, room: room} 
+        await socket.emit("leave_room", data) 
+       }
         let roomID = "";
-        
+
         if(user.id < ctct._id) 
         roomID = user.id+ctct._id
         else 
         roomID = ctct._id+user.id
-       
+        
         setRoom(roomID)
         setChatUser({...ctct})
         if(isDraw)
