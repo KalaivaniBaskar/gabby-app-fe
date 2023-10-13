@@ -10,7 +10,7 @@ import { Button, TextField, Box, Paper, Avatar } from '@mui/material';
 import {  useNavigate } from 'react-router-dom';
 
 const ProfilePic = () => {
-    const {user , setUser} = useCTX();
+    const {user , setUser, toastOptions} = useCTX();
     //console.log(user)
     const navigate = useNavigate()
     const [image, setImage] = useState({url: user.pic_URL, public_id: user.pic_URL_ID});
@@ -25,14 +25,6 @@ const ProfilePic = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => { setOpen(false)} 
   
-  const toastOptions = {
-      position: "bottom-right",
-      autoClose: 5000,
-      pauseOnHover: true,
-      draggable : true,
-      theme: 'dark'
-  } 
-
   const handleImage = (e) => {
       setFileSizeExceeded(false);
       const file = e.target.files[0]; 

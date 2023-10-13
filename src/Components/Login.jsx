@@ -31,14 +31,8 @@ const Login = () => {
   const [modalMsg, setmodalMsg] = useState("")
   const handleOpen = () => setOpen(true);
   const handleClose = () => { setOpen(false)} 
-  const {setUser} = useCTX();
-  const toastOptions = {
-      position: "bottom-right",
-      autoClose: 5000,
-      pauseOnHover: true,
-      draggable : true,
-      theme: 'dark'
-  }
+  const {setUser, toastOptions} = useCTX();
+  
   const {values, 
       handleChange, 
       handleSubmit,

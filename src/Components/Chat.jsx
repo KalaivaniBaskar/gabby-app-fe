@@ -12,6 +12,7 @@ import ContactPanel from './ContactPanel';
 import ChatBox from './ChatBox';
 import MenuIcon from '@mui/icons-material/Menu';
 import ContactPanelSide from './ContactPanelSide';
+import gabby from '../assets/gabby.png'
 
 const Chat = ({socket}) => {
 
@@ -20,15 +21,10 @@ const Chat = ({socket}) => {
   const [modalMsg, setmodalMsg] = useState("")
   const handleOpen = () => setOpen(true);
   const handleClose = () => { setOpen(false)} 
-  const {user, setUser, chatUser, setChatUser, setContactList, isDraw, setIsDraw} = useCTX();
+  const {user, setUser, chatUser, setChatUser, 
+    setMessageList, setContactList,
+     isDraw, setIsDraw,toastOptions} = useCTX();
   
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 5000,
-    pauseOnHover: true,
-    draggable : true,
-    theme: 'dark'
-} 
 
   const handleLogout = () => {
           
@@ -36,6 +32,7 @@ const Chat = ({socket}) => {
             setUser({})
             setContactList([])
             setChatUser("")
+            setMessageList([])
   } 
   
   
@@ -60,15 +57,11 @@ const Chat = ({socket}) => {
            </div>
          <div className='chat-box'>
                <div className='nav-wrap'>
-               <div className='user-wrap'> 
-                    <Tooltip title={<p style={{ color: "white", fontSize: '14px' }}>Edit Avatar </p>} 
-                    placement="top-start" arrow>
-                  <Avatar sx={{ width: 50, height: 50 , bgcolor: '#0E0E0E' }}  
-                   alt={user?.username} src= {user?.pic_URL ? user.pic_URL:  "na"}
-                   onClick={()=> navigate('/profile-pic')} />
-                </Tooltip>
-                    <h4>{user.email}</h4>
-                </div> 
+               <div className='logo-wrap-panel'> 
+                    <img src={gabby} alt="Gabby logo" />
+                    <h3>Gabby</h3>
+              </div> 
+             
                 <div className='logo-wrap'>              
                 <IconButton color='secondary' 
                 onClick={handleLogout}>

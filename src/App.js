@@ -7,9 +7,18 @@ import Chat from './Components/Chat';
 import ProfilePic from './Components/ProfilePic';
 import { BASE_URL } from './Services/APIServices.js';
 import io from "socket.io-client";
+import { useEffect } from 'react';
 
 function App() {
   const socket = io.connect(BASE_URL);  
+
+  useEffect(() => {
+
+    return () => {
+      socket.disconnect();
+    };
+  });
+
   return (
     <div className='App'> 
     <Routes>

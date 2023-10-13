@@ -10,6 +10,7 @@ import ModalInfo from './ModalInfo';
 import gabby from '../assets/gabby.png'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useCTX } from '../Context/ContextProvider.jsx';
 
  export const registerSchema = yup.object().shape({
     username: yup.string().required("Please enter name").min(3, 'Too Short!').max(20, 'Too Long!'),
@@ -29,20 +30,14 @@ import 'react-toastify/dist/ReactToastify.css';
     }); 
 
 const Register = () => { 
-
+    const { toastOptions} = useCTX();
     const [resp, setResp] = useState("")
     const navigate = useNavigate();
     const [open, setOpen] = useState(false)
     const [modalMsg, setmodalMsg] = useState("")
     const handleOpen = () => setOpen(true);
     const handleClose = () => { setOpen(false)} 
-    const toastOptions = {
-        position: "bottom-right",
-        autoClose: 5000,
-        pauseOnHover: true,
-        draggable : true,
-        theme: 'dark'
-    }
+    
     const {values, 
         handleChange, 
         handleSubmit,

@@ -8,13 +8,16 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import { Tooltip, Avatar, IconButton, Box } from '@mui/material';
 import { toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import gabby from '../assets/gabby.png'
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { useNavigate } from 'react-router-dom';
 
 const ContactPanel = ({socket}) => {
     const {user, setUser, setChatUser,
         contactList, setContactList,
-        isDraw, setIsDraw,  setRoom } = useCTX();
+        isDraw, setIsDraw,  setRoom, 
+         setMessageList, toastOptions } = useCTX();
+         const navigate = useNavigate();
+
     const [dialogopen, setDialogOpen] = useState(false);
     const [addCt, setAddCt] = useState("");
     const handleDialogOpen = () => {
@@ -30,13 +33,6 @@ const ContactPanel = ({socket}) => {
     const handleClose = () => { setOpen(false)} 
     
 
-    const toastOptions = {
-      position: "bottom-right",
-      autoClose: 5000,
-      pauseOnHover: true,
-      draggable : true,
-      theme: 'dark'
-  } 
     
       const addContact = async() => {
         
@@ -111,11 +107,39 @@ const ContactPanel = ({socket}) => {
           if( userA && roomID ) {
             const data = {name: userA, room: roomID} 
             socket.emit("join_room", data) 
-            handleClose()
+            getChatMessages(roomID)
+             
           }
       }
       
-      const handleChatUser = (ctct, idx) => { 
+      const getChatMessages = async(room_ID) => {
+
+        try{  
+          
+          handleOpen()
+          const token = localStorage.getItem('tokenAuth')
+          const config = { headers : {"x-auth-token" : token}}
+          const response = await axios.post(`${BASE_URL}/auth/user/room`, 
+          {room_ID}, config )
+          //console.log(response)
+          if(response.status=== 200){
+            setMessageList(response.data.chat.messages)
+            handleClose()
+      
+          }
+        }
+        catch(error){ 
+          console.log(error)
+          const err = error?.response?.data?.message
+          toast.error (
+              (err ? err : "Error fetching chat! ".concat(error.response.status)),
+              toastOptions
+          )
+          handleClose()
+        }  
+      }
+
+      const handleChatUser = (ctct) => { 
         handleOpen();
        // console.log(ctct._id, user.id) 
         let roomID = "";
@@ -135,8 +159,7 @@ const ContactPanel = ({socket}) => {
       const getContactList = async() => { 
         
         try{  
-          //const contacts = localStorage.getItem('contacts')
-          //console.log(contacts, user.contacts)
+
           handleOpen()
           const token = localStorage.getItem('tokenAuth')
           const config = { headers : {"x-auth-token" : token}}
@@ -151,7 +174,7 @@ const ContactPanel = ({socket}) => {
               (`${response.data.contactList.length} Contacts fetched`),
               toastOptions
           )
-          }
+          } 
         }
         catch(error){ 
           console.log(error)
@@ -167,10 +190,19 @@ const ContactPanel = ({socket}) => {
 
   return (
          <>
-           <div className='logo-wrap-panel'> 
-                    <img src={gabby} alt="Gabby logo" />
-                    <h3>Gabby</h3>
-              </div> 
+               <div className='user-wrap'> 
+                    <Tooltip title={<p style={{ color: "white", fontSize: '14px' }}>Edit Avatar </p>} 
+                    placement="top-start" arrow>
+                  <Avatar sx={{ width: 50, height: 50 , bgcolor: '#0E0E0E' }}  
+                   alt={user?.username} src= {user?.pic_URL ? user.pic_URL:  "na"}
+                   onClick={()=> navigate('/profile-pic')} />
+                </Tooltip>
+               
+                <Tooltip title={<p style={{ color: "white", fontSize: '14px' }}> 
+                {user.email}</p>} placement="top-start" arrow>
+                    <h4 style={{textTransform: 'capitalize'}}>{user.username}</h4>
+                    </Tooltip>
+                </div> 
               <div>
              <p style={{fontSize: '18px'}}>Contacts
 

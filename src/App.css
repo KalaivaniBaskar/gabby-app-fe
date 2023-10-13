@@ -121,7 +121,9 @@
   .contact-wrap{
     display: none;
   }
-  
+  .user-wrap{
+    color: black;
+  }
   .chat{
     grid-template-columns: 1fr;
     padding: 1rem;
@@ -149,11 +151,11 @@
 }
 .logo-wrap-panel{
   display: flex;
-  width: 100%;
+  width: auto;
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 0.5rem;
-  box-shadow: 0 0 0.2rem #4e6ebe;
+  /* box-shadow: 0 0 0.2rem #4e6ebe; */
 }
 .logo-wrap-panel > img{
   width: 4rem;
@@ -181,10 +183,9 @@
 .user-wrap{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
-  color: white;
-  box-sizing: border-box;
+  box-sizing: border-box; 
 }
 .chat-screen{
   width: 100%;
@@ -334,9 +335,14 @@ aside.EmojiPickerReact.epr-main{
   margin-right: 5px;
 }
 
+ .message-date {
+  justify-content: center;
+  display: flex;
+} 
+
 .message-meta #sender {
   margin-left: 10px;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .chat-msgs .message .message-meta {
