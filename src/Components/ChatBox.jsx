@@ -91,14 +91,22 @@ const ChatBox = ({socket}) => {
        setChatUser("")
     }
 
-    useEffect(()=> {
-      socket.on("receive_msg", (data) => {
-        //console.log("received",data)
-         setMessageList((list) => [...list, data]);
-      }) 
-      
-  },[socket])
+    useEffect(() => { 
 
+      const receiveMsgHandler = (data) => { 
+        //console.log("received", data); 
+        setMessageList((list) => [...list, data]); 
+      }; 
+       
+        socket.on("receive_msg", receiveMsgHandler); 
+
+    // Clean up the event listener when the component is unmounted 
+      return () => { 
+      socket.off("receive_msg", receiveMsgHandler); 
+    }; 
+    }, [setMessageList, socket]);
+
+ 
   return (
   
     <div className='chat-screen'>
@@ -121,7 +129,7 @@ const ChatBox = ({socket}) => {
           {/* <div>   */}
           <div className='chat-msgs'>
           <ScrollToBottom className="message-container">
-            {messageList.map((messageContent, idx) => {
+            {messageList.length ? messageList.map((messageContent, idx) => {
               return (
                 <div  key={idx}
                   className="message"
@@ -138,7 +146,9 @@ const ChatBox = ({socket}) => {
                   </div>
                 </div>
               );
-            })}
+            })
+          : ""
+          }
           </ScrollToBottom>
           </div>
          {/* </div> */}
